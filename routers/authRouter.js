@@ -60,7 +60,6 @@ function getToken(user) {
     const payload = {
       subject: user.id,
       username: user.username,
-    //   role: user.role || "user",
     };
   
     const options = {
@@ -69,8 +68,6 @@ function getToken(user) {
   
     return jwt.sign(payload, jwtSecret, options);
   }
-
-
 
 
 module.exports = router;
