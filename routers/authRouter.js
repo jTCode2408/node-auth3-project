@@ -6,7 +6,8 @@ const router = express.Router();
 const Users = require('./user-model');
 const { jwtSecret } = require('../config/secrets')
 
-router.get('/users', (req, res) => {
+const restricted = require('../middleware')
+router.get('/users', restricted, (req, res) => {
     Users.find()
         .then(users => {
             res.status(200).json(users)
@@ -18,7 +19,7 @@ router.get('/users', (req, res) => {
 })
 
 router.post('/register', (req, res) => {
-    const newUser = req.body
+    let newUser = req.body
     const hashed = bcrypt.hashSync(newUser.password, 10)
         newUser.password = hashed
     
@@ -33,7 +34,7 @@ router.post('/register', (req, res) => {
 })
 
 router.post('/login', (req, res) => {
-    const { username, password } = req.body
+    let { username, password } = req.body
     Users.findBy({ username })
         .first()
         .then(user=>{
@@ -59,7 +60,7 @@ function getToken(user) {
     const payload = {
       subject: user.id,
       username: user.username,
-      role: user.role || "user",
+    //   role: user.role || "user",
     };
   
     const options = {
